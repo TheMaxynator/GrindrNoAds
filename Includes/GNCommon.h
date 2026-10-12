@@ -19,3 +19,8 @@ FOUNDATION_EXPORT void GNInstallContainerHooks(void);
 // The settings panel is opened by a two-finger long press inside Grindr.
 FOUNDATION_EXPORT void GNInstallSettingsGesture(void);
 FOUNDATION_EXPORT void GNInstallConfiguredHooks(void);
+
+// Conservative removal of a dedicated one-child host around a known ad view.
+FOUNDATION_EXPORT void GNHandleKnownAdViewHost(UIView * _Nonnull adView);
+// Optional on-device inspector. Captures class names/frames only; no user content.
+FOUNDATION_EXPORT void GNBeginGapDiagnosis(UIWindow * _Nonnull window);

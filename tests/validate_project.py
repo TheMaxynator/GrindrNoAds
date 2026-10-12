@@ -67,5 +67,26 @@ check('objc_getAssociatedObject' in container and 'constraintEqualToConstant:0.0
 check('GNIsNetworkFilteringEnabled()) return gOriginalDataTask' in (ROOT/'Sources/NetworkHooks.m').read_text(),
       'Disabling network filtering also gates already-installed hooks')
 
+# v1.1.1 beta2: wrapper collapse must be derived from an actual known ad view.
+wrapper = (ROOT/'Sources/GNAdHost.m').read_text()
+adviews = (ROOT/'Sources/AdViewHooks.m').read_text()
+diag = (ROOT/'Sources/GNDiagnostics.m').read_text()
+check('host.subviews.count != 1' in wrapper and 'host.subviews.firstObject != adView' in wrapper,
+      'Wrapper cleanup only targets a dedicated sole-child ad host')
+check('GNIsContainerCleanupEnabled()' in wrapper and 'GNIsViewRemovalEnabled()' in wrapper,
+      'Wrapper cleanup respects existing settings')
+check('host == window.rootViewController.view' in wrapper and 'GNIsUnsafeContainer' in wrapper,
+      'No root view, scrollview, navbar or tabbar global modifications')
+check('GNHandleKnownAdViewHost(view)' in adviews,
+      'Known Swift ad views discover their immediate wrapper before removal')
+check('GNBeginGapDiagnosis(window)' in ui and 'GNGenerateGapReport' in diag,
+      'User-triggered in-app layout diagnosis exists')
+check('UIPasteboard generalPasteboard' in diag and 'UIText' not in diag,
+      'Diagnostic copies geometry, without harvesting user text')
+check('Sources/GNAdHost.m' in (ROOT/'Makefile').read_text() and
+      'Sources/GNDiagnostics.m' in (ROOT/'Makefile').read_text(),
+      'New modules included in Theos build')
+check('1.1.1~beta2' in (ROOT/'control').read_text(), 'Package version incremented')
+
 print(f"\n{len(errors)} failing check(s). NOTE: these are STATIC tests, not an iOS compile/runtime test.")
 sys.exit(1 if errors else 0)

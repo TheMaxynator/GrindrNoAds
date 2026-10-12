@@ -1,4 +1,4 @@
-# GrindrNoAds v1.1.0 beta1 – sourceproject (rootless Theos)
+# GrindrNoAds v1.1.1 beta2 – sourceproject (rootless Theos)
 
 Een **nieuw geschreven** jailbreak-tweak die de *advertentieblokkerende* werking van een onderzocht pakket probeert te reproduceren, zonder de oude code/binary of diens licentie- en apparaatidentificatiesysteem over te nemen. De bron is een ontwikkelbaar uitgangspunt, **niet op een toestel gevalideerd installatiepakket**.
 
@@ -103,3 +103,36 @@ Dit project hergebruikt geen licentiecode, UDID, apparaat-ID of oorspronkelijke 
 
 Upload de volledige mapinhoud (inclusief `.github/workflows/build-rootless.yml`) naar de repository; de workflow draait de statische tests en bouwt daarna een `.deb` op macOS. Deze beta is **nog niet gecompileerd op iOS**. Installeer pas nadat GitHub Actions succesvol heeft gecompileerd en maak een herstelmogelijkheid via Sileo.
 
+
+
+## Wijzigingen in v1.1.1 beta2: leeg bannervak
+
+De eerste praktijktest van v1.1.0 beta1 bevestigde: geen advertentiepop-ups, stabiele profielen/chats, werkend instellingenmenu, **maar nog wel een lege strook onder de profielgrid**.
+
+Deze versie probeert de strook **conservatief** te verwijderen:
+
+- Beide waargenomen Swift-varianten (`GrindrAdsImpl.AdView`, `GrindrAds.AdView`) worden nu bij zowel `didMoveToWindow` als `layoutSubviews` behandeld.
+- **Vóór** het verwijderen van een bekende advertentieview controleert de nieuwe `GNAdHost.m` of haar onmiddellijke parent een afzonderlijke wrapper is die uitsluitend deze advertentie als child heeft.
+- Alleen voor zo'n specifieke wrapper, met een geloofwaardige bannerhoogte (8–180 punten), voldoende breedte en positie onderaan het scherm, wordt de wrapper verborgen en de eigen expliciete hoogte naar nul gezet. Bestaande scrollviews, tabbars, rootviews en navigatiebalken worden niet generiek aangepast.
+- Dit pad respecteert de bestaande schakelaars **Advertentieviews** en **Lege advertentieruimte**. Je kunt de correctie uitschakelen door de laatste optie uit te zetten en Grindr volledig opnieuw te starten.
+
+**Onzekerheid:** als de lege ruimte wordt gereserveerd door een andere controller, een scroll-inset of een layout guide, herkent deze veilige wrapperheuristiek de bron niet. Er worden bewust geen willekeurige view- of safe-area-aanpassingen gedaan.
+
+### Nieuwe diagnoseoptie
+
+Als de strook blijft staan:
+
+1. Open Grindr en ga naar de profielgrid.
+2. Open het tweakmenu: **twee vingers gedurende 1,2 seconde vasthouden**.
+3. Kies **Diagnoseer lege bannerruimte**, daarna **Start meting**.
+4. Tik eenmaal midden in de lege strook. Er opent een rapportvenster.
+5. Kies **Kopieer rapport** en plak de tekst in ChatGPT.
+
+Het rapport bevat **alleen view-classnamen, posities, afmetingen, aantallen subviews en relevante constraintwaarden**. Er worden geen profielfoto's, berichten, namen, UDID's of netwerkgegevens opgenomen. Het wordt niet naar een externe server verstuurd; alleen de expliciete kopieeractie schrijft naar het iOS-klembord. De eenmalige tikmeting vervalt automatisch na 30 seconden.
+
+### Status en installatie
+
+- Statische broncode-/configuratietests zijn geslaagd, maar deze wijziging is **nog niet op een iPhone gecompileerd of gevalideerd**.
+- Bouw opnieuw via GitHub Actions; pak het `GrindrNoAds-rootless-deb`-artifact uit en installeer de `.deb` via Sileo over de bestaande versie.
+- Bewaar de eerder werkende **v1.1.0 beta1** als terugvalmogelijkheid.
+- Blijft de ruimte zichtbaar? **Niet** `AggressiveManagerResetEnabled` aanzetten als alternatief voor layoutdiagnose; dit is een afzonderlijke, risicovolle codeweg.

@@ -8,7 +8,7 @@ INSTALL_TARGET_PROCESSES = Grindr
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = GrindrNoAds
-GrindrNoAds_FILES = Tweak.xm Sources/GNConfig.m Sources/NetworkHooks.m Sources/AdViewHooks.m Sources/ContainerHooks.m Sources/GNSettingsUI.m
+GrindrNoAds_FILES = Tweak.xm Sources/GNConfig.m Sources/NetworkHooks.m Sources/AdViewHooks.m Sources/ContainerHooks.m Sources/GNSettingsUI.m Sources/GNAdHost.m Sources/GNDiagnostics.m
 GrindrNoAds_CFLAGS = -fobjc-arc -Wall -Wextra -Wno-unused-parameter -I$(THEOS_PROJECT_DIR)
 GrindrNoAds_FRAMEWORKS = Foundation UIKit
 

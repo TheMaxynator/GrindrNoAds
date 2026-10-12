@@ -72,6 +72,11 @@ static void GNShowSettings(UIWindow *window) {
     GNAddSetting(panel, @"Debuglogging", @"DebugLoggingEnabled", GNDebugEnabled(), window);
     GNAddSetting(panel, @"Manager-reset (risicovol)", @"AggressiveManagerResetEnabled",
                  GNIsAggressiveManagerResetEnabled(), window);
+    [panel addAction:[UIAlertAction actionWithTitle:@"Diagnoseer lege bannerruimte"
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)),
+                           dispatch_get_main_queue(), ^{ GNBeginGapDiagnosis(window); });
+        }]];
     [panel addAction:[UIAlertAction actionWithTitle:@"Sluiten" style:UIAlertActionStyleCancel handler:nil]];
     [presenter presentViewController:panel animated:YES completion:nil];
 }

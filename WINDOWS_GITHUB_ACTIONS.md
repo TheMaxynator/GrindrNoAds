@@ -55,3 +55,8 @@ Officiële referenties:
 ## v1.1.0 beta1
 
 Upload de nieuwe bestanden `Tweak.xm`, `Makefile`, `control`, `Includes/GNCommon.h`, `Sources/GNConfig.m`, `Sources/NetworkHooks.m`, `Sources/AdViewHooks.m`, `Sources/ContainerHooks.m` en `Sources/GNSettingsUI.m`. Het bestaande build-workflowbestand kan blijven staan. Na een geslaagde build test je eerst de advertentieblokkering; daarna houd je met twee vingers minstens 1,2 seconden het Grindr-scherm ingedrukt voor het nieuwe instellingenmenu.
+
+
+## v1.1.1 beta2
+
+Bijwerken vanaf beta1: vervang de gewijzigde bestanden uit de meegeleverde Hotfix ZIP (inclusief nieuwe `Sources/GNAdHost.m` en `Sources/GNDiagnostics.m`). Commit daarna de wijzigingen op `main`. Ga naar **Actions → Build GrindrNoAds (rootless) → Run workflow** en download het nieuwe `.deb`-artifact. Het is **niet** nodig om Ubuntu of Theos lokaal op Windows te installeren.
