@@ -1,6 +1,7 @@
 #import "Includes/GNCommon.h"
 #import <substrate.h>
 #import <string.h>
+#import <stdlib.h> // free(class_copyIvarList result)
 
 typedef void (*GNVoidIMP)(id, SEL);
 static GNVoidIMP gOriginalRootViewDidLoad;
