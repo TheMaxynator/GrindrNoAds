@@ -10,7 +10,11 @@ static BOOL gDebug = NO;
 static NSSet<NSString *> *gDomains;
 
 static BOOL GNOption(NSDictionary *dict, NSString *key, BOOL defaultValue) {
-    id value = dict[key];
+    // The app-owned defaults domain is always accessible to code running inside Grindr.
+    // File-backed defaults remain a fallback for older installations if sandbox permits.
+    NSString *localKey = [@"GNA." stringByAppendingString:key];
+    id value = [[NSUserDefaults standardUserDefaults] objectForKey:localKey];
+    if (value == nil) value = dict[key];
     return [value respondsToSelector:@selector(boolValue)] ? [value boolValue] : defaultValue;
 }
 

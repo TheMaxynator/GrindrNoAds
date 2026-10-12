@@ -1,10 +1,10 @@
 Package: dev.openresearch.grindrnoads
 Name: GrindrNoAds
-Version: 1.0.0
+Version: 1.1.0~beta1
 Architecture: iphoneos-arm64
 Section: Tweaks
 Priority: optional
 Maintainer: Community build
 Depends: firmware (>= 15.0), mobilesubstrate
 Conflicts: com.0xkuj.grindruntuckednoads
-Description: Standalone, configurable Grindr ad filtering for rootless jailbreaks. No UDID collection, remote licensing, or SpringBoard injection.
+Description: Privacy-focused Grindr ad filtering with in-app settings and safer banner layout cleanup. No UDID collection, remote licensing, or SpringBoard injection.

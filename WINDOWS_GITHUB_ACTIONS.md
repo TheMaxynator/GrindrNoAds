@@ -10,7 +10,7 @@ Dit project gebruikt **GitHub Actions** om een Theos-build op een **externe macO
 
 ## 2. Upload de bestanden
 
-1. Pak `GrindrNoAds_v1.0.0_Windows_GitHub_Actions.zip` uit op Windows.
+1. Pak `GrindrNoAds_v1.0.1_GitHub_BuildFix.zip` uit op Windows.
 2. Open in GitHub de repository en kies **Add file > Upload files**.
 3. Sleep de **inhoud van de map `GrindrNoAds`** (niet een map extra niveau erboven) naar het uploadvenster. GitHub kan mappen en hun structuur bij slepen overnemen.
 4. Controleer vooral of in de repository de volgende paden rechtstreeks zichtbaar zijn:
@@ -50,3 +50,8 @@ Officiële referenties:
 - https://github.com/Randomblock1/theos-action
 - https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
 - https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
+
+
+## v1.1.0 beta1
+
+Upload de nieuwe bestanden `Tweak.xm`, `Makefile`, `control`, `Includes/GNCommon.h`, `Sources/GNConfig.m`, `Sources/NetworkHooks.m`, `Sources/AdViewHooks.m`, `Sources/ContainerHooks.m` en `Sources/GNSettingsUI.m`. Het bestaande build-workflowbestand kan blijven staan. Na een geslaagde build test je eerst de advertentieblokkering; daarna houd je met twee vingers minstens 1,2 seconden het Grindr-scherm ingedrukt voor het nieuwe instellingenmenu.

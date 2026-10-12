@@ -1,6 +1,6 @@
-# GrindrNoAds v1.0.0 – sourceproject (rootless Theos)
+# GrindrNoAds v1.1.0 beta1 – sourceproject (rootless Theos)
 
-Een **nieuw geschreven** jailbreak-tweak die de *advertentieblokkerende* werking van een onderzocht pakket probeert te reproduceren, zonder de oude code/binary of diens licentie- en apparaatidentificatiesysteem over te nemen. De bron is een ontwikkelbaar uitgangspunt, **geen getest of reeds gecompileerd installatiepakket**.
+Een **nieuw geschreven** jailbreak-tweak die de *advertentieblokkerende* werking van een onderzocht pakket probeert te reproduceren, zonder de oude code/binary of diens licentie- en apparaatidentificatiesysteem over te nemen. De bron is een ontwikkelbaar uitgangspunt, **niet op een toestel gevalideerd installatiepakket**.
 
 ## Functies
 
@@ -90,6 +90,16 @@ GrindrNoAds/
 
 Dit project hergebruikt geen licentiecode, UDID, apparaat-ID of oorspronkelijke dylib. Het is een functioneel vergelijkbare, onafhankelijke herimplementatie; de daadwerkelijke werking blijft afhankelijk van compilatie, de lokale jailbreak en de Grindr-build.
 
-## Vanaf Windows zonder WSL/Ubuntu: GitHub Actions
 
-Dit project bevat een kant-en-klare cloud-buildworkflow in `.github/workflows/build-rootless.yml`. Beheer de broncode op Windows en laat GitHub een macOS-runner met Theos en iOS SDK starten. Download na een geslaagde build het `.deb`-bestand uit de workflow-artifacts. Zie [WINDOWS_GITHUB_ACTIONS.md](WINDOWS_GITHUB_ACTIONS.md) voor stappen. Deze methode compileert **niet lokaal** op Windows; GitHub compileert extern en levert het installatiebestand terug.
+## Nieuwe werking (v1.1.0 beta1)
+
+- **Instellingen in Grindr:** houd met **twee vingers 1,2 seconde** je vinger op een leeg deel van het scherm. Een `GrindrNoAds`-dialoog opent de vijf schakelopties. Deze waarden worden via `NSUserDefaults standardUserDefaults` opgeslagen binnen Grindrs eigen appcontainer, onder sleutels `GNA.<key>`. Dit heeft geen PreferenceLoader of libSandy nodig.
+- Instellingen via de oorspronkelijke `settings.plist` zijn een **fallback**; op sandboxed toestellen zijn ze mogelijk onleesbaar. De nieuwe UI-opties hebben voorrang.
+- Schakelopties zijn grotendeels direct bruikbaar, maar **sluit Grindr volledig af en open opnieuw** om alle UI-veranderingen te zien. Reeds verwijderde banner-views worden niet gereconstrueerd zonder nieuwe layout.
+- Herhaalde root hooks op `viewDidLayoutSubviews` en `viewDidAppear:` pakken advertentiecontainers op die pas na `viewDidLoad` worden opgebouwd. Er wordt uitsluitend een expliciete `adContainerView` verborgen en de *eigen hoogtebeperkingen* worden naar nul gezet. Er worden **geen** generieke safe-area-/tabbar-/scrollinsets veranderd.
+- De ruimte onder de profielgrid kan app-intern uit een ander mechanisme komen. Dit is een **gerichte, ongeteste fix**, geen garantie op volledige opheffing. Als de ruimte blijft bestaan, is een screenshot of UI-hiërarchie noodzakelijk.
+
+## Compilatie via GitHub Actions
+
+Upload de volledige mapinhoud (inclusief `.github/workflows/build-rootless.yml`) naar de repository; de workflow draait de statische tests en bouwt daarna een `.deb` op macOS. Deze beta is **nog niet gecompileerd op iOS**. Installeer pas nadat GitHub Actions succesvol heeft gecompileerd en maak een herstelmogelijkheid via Sileo.
+

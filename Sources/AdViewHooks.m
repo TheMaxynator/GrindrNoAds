@@ -9,7 +9,7 @@ static BOOL gLayoutHookInstalled = NO;
 
 static void GNHookDidMoveToWindow(id object, SEL cmd) {
     if (gOrigDidMoveToWindow) gOrigDidMoveToWindow(object, cmd);
-    if (![object isKindOfClass:[UIView class]]) return;
+    if (!GNIsViewRemovalEnabled() || ![object isKindOfClass:[UIView class]]) return;
     UIView *view = (UIView *)object;
     if (!view.superview) return;
     // Original hook removed the AdView. Hide first to avoid visible flashes.
@@ -19,7 +19,7 @@ static void GNHookDidMoveToWindow(id object, SEL cmd) {
 
 static void GNHookLayoutSubviews(id object, SEL cmd) {
     if (gOrigLayoutSubviews) gOrigLayoutSubviews(object, cmd);
-    if (![object isKindOfClass:[UIView class]]) return;
+    if (!GNIsViewRemovalEnabled() || ![object isKindOfClass:[UIView class]]) return;
     UIView *view = (UIView *)object;
     if (!view.hidden) view.hidden = YES;
     if (view.alpha != 0.0) view.alpha = 0.0;

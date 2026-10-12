@@ -10,6 +10,7 @@ static BOOL gNetworkHookInstalled = NO;
 static NSURLSessionDataTask *GNHookDataTask(NSURLSession *session, SEL cmd, NSURLRequest *request,
     void (^completion)(NSData * _Nullable, NSURLResponse * _Nullable, NSError * _Nullable)) {
     if (!gOriginalDataTask) return nil;
+    if (!GNIsNetworkFilteringEnabled()) return gOriginalDataTask(session, cmd, request, completion);
     NSURL *url = request.URL;
     NSString *scheme = [url.scheme lowercaseString];
     if (!completion || !url || !([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) ||

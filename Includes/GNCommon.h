@@ -15,3 +15,7 @@ FOUNDATION_EXPORT void GNLog(NSString * _Nonnull format, ...) NS_FORMAT_FUNCTION
 FOUNDATION_EXPORT void GNInstallNetworkHooks(void);
 FOUNDATION_EXPORT void GNInstallAdViewHooks(void);
 FOUNDATION_EXPORT void GNInstallContainerHooks(void);
+
+// The settings panel is opened by a two-finger long press inside Grindr.
+FOUNDATION_EXPORT void GNInstallSettingsGesture(void);
+FOUNDATION_EXPORT void GNInstallConfiguredHooks(void);

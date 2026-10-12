@@ -2,7 +2,7 @@
 
 // Avoid missing Swift classes when the injection happens before module registration.
 // Each module's install method is idempotent and can safely be retried at app lifecycle events.
-static void GNInstallConfiguredHooks(void) {
+void GNInstallConfiguredHooks(void) {
     if (GNIsNetworkFilteringEnabled()) GNInstallNetworkHooks();
     if (GNIsViewRemovalEnabled()) GNInstallAdViewHooks();
     if (GNIsContainerCleanupEnabled()) GNInstallContainerHooks();
@@ -16,10 +16,11 @@ static void GNInstallConfiguredHooks(void) {
         GNLoadConfiguration();
         GNLog(@"Starting in %@", identifier);
         GNInstallConfiguredHooks();
+        GNInstallSettingsGesture();
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         [center addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:nil
-                       usingBlock:^(NSNotification *note) { GNInstallConfiguredHooks(); }];
+                       usingBlock:^(NSNotification *note) { GNInstallConfiguredHooks(); GNInstallSettingsGesture(); }];
         [center addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil
-                       usingBlock:^(NSNotification *note) { GNInstallConfiguredHooks(); }];
+                       usingBlock:^(NSNotification *note) { GNInstallConfiguredHooks(); GNInstallSettingsGesture(); }];
     }
 }

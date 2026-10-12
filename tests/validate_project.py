@@ -37,6 +37,10 @@ for host, expected in {
     check(would_block(host) == expected, f'Boundary test: {host}')
 
 source = '\n'.join(path.read_text() for path in [ROOT/'Tweak.xm', *sorted((ROOT/'Sources').glob('*.m'))])
+check('GNLog(NSString * _Nonnull format' in (ROOT/'Includes/GNCommon.h').read_text(),
+      'GNLog header has explicit nullability (fixes -Werror,-Wnullability-completeness)')
+check('#import <stdlib.h>' in (ROOT/'Sources/ContainerHooks.m').read_text(),
+      'stdlib.h explicitly imported for free()')
 check('MSHookMessageEx' in source, 'Real Substrate hooking implementation present')
 for selector in ('dataTaskWithRequest:completionHandler:', 'didMoveToWindow', 'layoutSubviews', 'viewDidLoad'):
     check(selector in source, f'Original hook target reconstructed: {selector}')
@@ -46,5 +50,22 @@ check('com.apple.springboard' not in (ROOT/'GrindrNoAds.plist').read_text(), 'Fi
 check('THEOS_PACKAGE_SCHEME = rootless' in (ROOT/'Makefile').read_text(), 'Theos rootless package scheme')
 check('Conflicts: com.0xkuj.grindruntuckednoads' in (ROOT/'control').read_text(), 'Package conflicts with original tweak')
 check(not list(ROOT.rglob('*.dylib')), 'No repackaged third-party executable')
-print(f'\n{len(errors)} failing check(s). NOTE: these are STATIC tests, not an iOS compile/runtime test.')
+
+
+# v1.1.0 beta: ensure new user-facing options have a persistent, app-owned storage domain.
+ui = (ROOT / 'Sources/GNSettingsUI.m').read_text()
+config = (ROOT / 'Sources/GNConfig.m').read_text()
+container = (ROOT / 'Sources/ContainerHooks.m').read_text()
+check('NSUserDefaults standardUserDefaults' in ui and 'NSUserDefaults standardUserDefaults' in config,
+      'In-app settings and config reader use the same app-local preference store')
+check('GNA.' in ui and 'GNA.' in config, 'Shared preference key prefix')
+check('numberOfTouchesRequired = 2' in ui, 'Two-finger settings gesture')
+check('@selector(viewDidLayoutSubviews)' in container and '@selector(viewDidAppear:)' in container,
+      'Late-created ad containers are revisited after viewDidLoad')
+check('objc_getAssociatedObject' in container and 'constraintEqualToConstant:0.0' in container,
+      'Idempotent, zero-height ad container constraint')
+check('GNIsNetworkFilteringEnabled()) return gOriginalDataTask' in (ROOT/'Sources/NetworkHooks.m').read_text(),
+      'Disabling network filtering also gates already-installed hooks')
+
+print(f"\n{len(errors)} failing check(s). NOTE: these are STATIC tests, not an iOS compile/runtime test.")
 sys.exit(1 if errors else 0)
