@@ -10,6 +10,7 @@ FOUNDATION_EXPORT BOOL GNIsViewRemovalEnabled(void);
 FOUNDATION_EXPORT BOOL GNIsContainerCleanupEnabled(void);
 FOUNDATION_EXPORT BOOL GNIsAggressiveManagerResetEnabled(void);
 FOUNDATION_EXPORT BOOL GNDebugEnabled(void);
+FOUNDATION_EXPORT BOOL GNIsExperimentalBottomGapFixEnabled(void);
 FOUNDATION_EXPORT BOOL GNHostIsBlocked(NSString * _Nullable host);
 FOUNDATION_EXPORT void GNLog(NSString * _Nonnull format, ...) NS_FORMAT_FUNCTION(1, 2);
 FOUNDATION_EXPORT void GNInstallNetworkHooks(void);
@@ -24,3 +25,6 @@ FOUNDATION_EXPORT void GNInstallConfiguredHooks(void);
 FOUNDATION_EXPORT void GNHandleKnownAdViewHost(UIView * _Nonnull adView);
 // Optional on-device inspector. Captures class names/frames only; no user content.
 FOUNDATION_EXPORT void GNBeginGapDiagnosis(UIWindow * _Nonnull window);
+
+// Opt-in geometry-matched 74pt ad-placeholder collapse. Never shifts tab/safe areas directly.
+FOUNDATION_EXPORT void GNApplyBottomGapFix(UIViewController * _Nonnull controller);

@@ -113,7 +113,10 @@ static void GNHookRootViewDidLoad(id object, SEL cmd) {
 static void GNHookRootViewDidLayoutSubviews(id object, SEL cmd) {
     if (gOriginalRootViewDidLayoutSubviews) gOriginalRootViewDidLayoutSubviews(object, cmd);
     // Some ad containers are not populated until AFTER viewDidLoad.
-    if ([object isKindOfClass:[UIViewController class]]) GNProcessContainerIvars(object);
+    if ([object isKindOfClass:[UIViewController class]]) {
+        GNProcessContainerIvars(object);
+        GNApplyBottomGapFix((UIViewController *)object);
+    }
 }
 
 static void GNHookRootViewDidAppear(id object, SEL cmd, BOOL animated) {

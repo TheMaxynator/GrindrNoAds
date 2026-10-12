@@ -6,4 +6,5 @@
     <key>ContainerCleanupEnabled</key><true/>
     <key>AggressiveManagerResetEnabled</key><false/>
     <key>DebugLoggingEnabled</key><false/>
+    <key>ExperimentalBottomGapFixEnabled</key><false/>
 </dict></plist>

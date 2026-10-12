@@ -1,4 +1,4 @@
-# GrindrNoAds v1.1.1 beta2 – sourceproject (rootless Theos)
+# GrindrNoAds v1.1.2 beta3 – sourceproject (rootless Theos)
 
 Een **nieuw geschreven** jailbreak-tweak die de *advertentieblokkerende* werking van een onderzocht pakket probeert te reproduceren, zonder de oude code/binary of diens licentie- en apparaatidentificatiesysteem over te nemen. De bron is een ontwikkelbaar uitgangspunt, **niet op een toestel gevalideerd installatiepakket**.
 
@@ -136,3 +136,20 @@ Het rapport bevat **alleen view-classnamen, posities, afmetingen, aantallen subv
 - Bouw opnieuw via GitHub Actions; pak het `GrindrNoAds-rootless-deb`-artifact uit en installeer de `.deb` via Sileo over de bestaande versie.
 - Bewaar de eerder werkende **v1.1.0 beta1** als terugvalmogelijkheid.
 - Blijft de ruimte zichtbaar? **Niet** `AggressiveManagerResetEnabled` aanzetten als alternatief voor layoutdiagnose; dit is een afzonderlijke, risicovolle codeweg.
+
+
+## v1.1.2 beta3 – Diagnose 74-punts placeholder
+
+Het apparaatrapport liet een **verborgen lege UIView van 74 pt** zien op `x0 y736 w390 h74`, direct onder de zichtbare `UITabBar` (`y687 h49`), met een onderste safe area van circa 34 pt. Dit is een **sterke aanwijzing** voor de overgebleven bannerreserve, maar de rapporttik kwam binnen als `x0 y0`; daardoor kennen we de exacte constraints van de verborgen view nog niet.
+
+- Het instellingenmenu bevat nu **Onderste 74pt-ruimte corrigeren (test)**. **Standaard UIT**. Als je dit aanzet, Grindr volledig afsluit en opnieuw opent, zoekt een aparte module naar exact **één** lege `UIView` met een hoogte van 72–76 pt, verborgen/onzichtbaar, ongeveer schermbreed, direct onder een bestaande `UITabBar` en net boven de onderste safe area.
+- Alleen als die view zélf een actieve, expliciete 72–76pt-hoogteconstraint heeft, wordt uitsluitend **die ene constraint** op 0 gezet. Geen wijzigingen aan tabbar, scroll-insets, safe-area-constraints of de frames van andere views. Bij onbekende/ambigue constraints blijft alles intact.
+- De **diagnosefunctie is uitgebreid**: ze scant verborgen views onafhankelijk van het tap-hit-testing en rapporteert tot drie kandidaten met hun parent chain, eigen constraints en directe siblings. Dat is belangrijk omdat onzichtbare views niet via een gewone `hitTest:` selecteerbaar zijn.
+- Dit is **niet gecompileerd of op iPhone getest**. Een ingeschakelde experimentele fix kan nog steeds een layoutverschil veroorzaken. Houd v1.1.1 beta2 beschikbaar als fallback.
+
+### Aanbevolen test
+
+1. Installeer de via GitHub Actions gecompileerde beta3. Controleer dat de oude functionaliteit nog steeds werkt.
+2. Open het instellingenmenu en zet **Onderste 74pt-ruimte corrigeren (test)** aan. Herstart Grindr volledig.
+3. Controleer of de tabbar, profielgrid en de voorheen lege strook correct zijn. Bij afwijkingen zet je de optie weer uit en herstart je Grindr.
+4. Als de ruimte nog aanwezig is: **Diagnoseer lege bannerruimte** → Start meting → tik in de strook → Kopieer rapport. Stuur dat rapport voor een exacte beoordeling van de parent constraints. Zet voor deze meting eventueel de experimentele fix UIT om de oorspronkelijke geometrie te bewaren.

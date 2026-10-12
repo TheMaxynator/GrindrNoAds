@@ -86,7 +86,34 @@ check('UIPasteboard generalPasteboard' in diag and 'UIText' not in diag,
 check('Sources/GNAdHost.m' in (ROOT/'Makefile').read_text() and
       'Sources/GNDiagnostics.m' in (ROOT/'Makefile').read_text(),
       'New modules included in Theos build')
-check('1.1.1~beta2' in (ROOT/'control').read_text(), 'Package version incremented')
+check('1.1.2~beta3' in (ROOT/'control').read_text(), 'Package version incremented')
+
+# v1.1.2 beta3: do not silently change UI geometry; fix only exact, opt-in slot.
+gap = (ROOT/'Sources/GNBottomGap.m').read_text()
+check(settings.get('ExperimentalBottomGapFixEnabled') is False,
+      'Experimental bottom-gap fix disabled by default')
+check('GNIsExperimentalBottomGapFixEnabled()' in gap and
+      'GNIsContainerCleanupEnabled()' in gap,
+      'Bottom-gap fix requires explicit opt-in and existing cleanup switch')
+check('fabs(CGRectGetMinY(frame) - tabBarBottom) <= 3.0' in gap and
+      'fabs(CGRectGetMaxY(frame) - expectedBottom) <= 4.0' in gap,
+      'Exact slot directly below tabbar and above safe area is required')
+check('view.subviews.count != 0' in gap and '[view class] != [UIView class]' in gap,
+      'Bottom-gap fix is restricted to empty base UIViews')
+check('count != 1' in gap and 'fixedHeight.constant = 0.0' in gap,
+      'Only one uniquely matching slot with its own fixed height can be collapsed')
+check('if (!fixedHeight)' in gap and 'return;' in gap,
+      'When slot height constraint is unknown, leave geometry untouched')
+check('GNApplyBottomGapFix((UIViewController *)object)' in container,
+      'Experimental correction runs after root controller layout')
+check('ExperimentalBottomGapFixEnabled' in ui and 'ExperimentalBottomGapFixEnabled' in config,
+      'Experimental switch shared between menu and settings storage')
+check('Hidden bottom-slot owners' in diag and 'direct siblings' in diag,
+      'Layout report includes independently identified hidden slot owners and siblings')
+check('Bottom safe-area inset' in diag and 'tap resolved near 0,0' in diag,
+      'Report states safe-area size and detects invalid origin taps')
+check('Sources/GNBottomGap.m' in (ROOT/'Makefile').read_text(),
+      'New module compiled by Theos')
 
 print(f"\n{len(errors)} failing check(s). NOTE: these are STATIC tests, not an iOS compile/runtime test.")
 sys.exit(1 if errors else 0)

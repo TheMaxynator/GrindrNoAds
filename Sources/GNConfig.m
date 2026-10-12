@@ -7,6 +7,7 @@ static BOOL gViews = YES;
 static BOOL gContainers = YES;
 static BOOL gAggressive = NO;
 static BOOL gDebug = NO;
+static BOOL gBottomGapFix = NO;
 static NSSet<NSString *> *gDomains;
 
 static BOOL GNOption(NSDictionary *dict, NSString *key, BOOL defaultValue) {
@@ -26,6 +27,7 @@ void GNLoadConfiguration(void) {
     gContainers = GNOption(settings, @"ContainerCleanupEnabled", YES);
     gAggressive = GNOption(settings, @"AggressiveManagerResetEnabled", NO);
     gDebug = GNOption(settings, @"DebugLoggingEnabled", NO);
+    gBottomGapFix = GNOption(settings, @"ExperimentalBottomGapFixEnabled", NO);
 
     NSArray *fallback = @[@"applovin.com", @"unity3d.com", @"vungle.com", @"doubleclick.net",
         @"adsmoloco.com", @"inmobi.com", @"smadex.com", @"mtgglobals.com", @"tapad.com", @"onelink.me"];
@@ -49,6 +51,7 @@ BOOL GNIsViewRemovalEnabled(void) { return gViews; }
 BOOL GNIsContainerCleanupEnabled(void) { return gContainers; }
 BOOL GNIsAggressiveManagerResetEnabled(void) { return gAggressive; }
 BOOL GNDebugEnabled(void) { return gDebug; }
+BOOL GNIsExperimentalBottomGapFixEnabled(void) { return gBottomGapFix; }
 
 BOOL GNHostIsBlocked(NSString *host) {
     if (![host isKindOfClass:[NSString class]] || !host.length) return NO;

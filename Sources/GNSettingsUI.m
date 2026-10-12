@@ -70,6 +70,8 @@ static void GNShowSettings(UIWindow *window) {
     GNAddSetting(panel, @"Advertentieviews", @"ViewRemovalEnabled", GNIsViewRemovalEnabled(), window);
     GNAddSetting(panel, @"Lege advertentieruimte", @"ContainerCleanupEnabled", GNIsContainerCleanupEnabled(), window);
     GNAddSetting(panel, @"Debuglogging", @"DebugLoggingEnabled", GNDebugEnabled(), window);
+    GNAddSetting(panel, @"Onderste 74pt-ruimte corrigeren (test)",
+                 @"ExperimentalBottomGapFixEnabled", GNIsExperimentalBottomGapFixEnabled(), window);
     GNAddSetting(panel, @"Manager-reset (risicovol)", @"AggressiveManagerResetEnabled",
                  GNIsAggressiveManagerResetEnabled(), window);
     [panel addAction:[UIAlertAction actionWithTitle:@"Diagnoseer lege bannerruimte"
