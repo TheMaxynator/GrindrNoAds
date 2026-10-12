@@ -1,0 +1,66 @@
+name: Build GrindrNoAds (rootless)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Compile tweak and package .deb
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Theos and iOS SDK
+        uses: Randomblock1/theos-action@v1
+        with:
+          theos-dir: ${{ github.workspace }}/theos
+          theos-src: https://github.com/theos/theos
+          theos-sdks: https://github.com/theos/sdks
+
+      - name: Check environment and run static tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "THEOS=${THEOS}"
+          ls -la "$THEOS/sdks"
+          python3 tests/validate_project.py
+
+      - name: Compile and package GrindrNoAds
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/build.sh 2>&1 | tee build.log
+          shopt -s nullglob
+          debs=(packages/*.deb)
+          if (( ${#debs[@]} == 0 )); then
+            echo "Theos did not create a .deb" >&2
+            exit 1
+          fi
+          printf 'Created: %s\n' "${debs[@]}"
+
+      - name: Upload rootless .deb
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GrindrNoAds-rootless-deb
+          path: packages/*.deb
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload build log if available
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GrindrNoAds-build-log
+          path: build.log
+          if-no-files-found: ignore
+          retention-days: 14
