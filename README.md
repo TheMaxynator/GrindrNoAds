@@ -89,3 +89,7 @@ GrindrNoAds/
 ```
 
 Dit project hergebruikt geen licentiecode, UDID, apparaat-ID of oorspronkelijke dylib. Het is een functioneel vergelijkbare, onafhankelijke herimplementatie; de daadwerkelijke werking blijft afhankelijk van compilatie, de lokale jailbreak en de Grindr-build.
+
+## Vanaf Windows zonder WSL/Ubuntu: GitHub Actions
+
+Dit project bevat een kant-en-klare cloud-buildworkflow in `.github/workflows/build-rootless.yml`. Beheer de broncode op Windows en laat GitHub een macOS-runner met Theos en iOS SDK starten. Download na een geslaagde build het `.deb`-bestand uit de workflow-artifacts. Zie [WINDOWS_GITHUB_ACTIONS.md](WINDOWS_GITHUB_ACTIONS.md) voor stappen. Deze methode compileert **niet lokaal** op Windows; GitHub compileert extern en levert het installatiebestand terug.
